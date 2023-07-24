@@ -19,7 +19,7 @@ const server = express();
 // Configuración del servidor
 
 server.use(cors());
-server.use(express.json({limit: "25mb"}));
+server.use(express.json({ limit: "25mb" }));
 
 
 // Conexion a la base de datos
@@ -56,16 +56,16 @@ server.listen(port, () => {
 
 server.get('/recetas', async (req, res) => {
 
-  const selectAllRec= 'SELECT * FROM recetas';
+  const selectAllRec = 'SELECT * FROM recetas';
   const conn = await getConnection();
   const [result] = await conn.query(selectAllRec);
   conn.end();
   res.json({
-    info: { 
+    info: {
       count: result.length,
-    }, 
-    results: result 
- });
+    },
+    results: result
+  });
 });
 
 // Obtener una recepta por su ID
@@ -80,7 +80,7 @@ server.get('/recetas/:id', async (req, res) => {
   //console.log(result);
   conn.end();
   res.json(
-    result [0]
+    result[0]
   );
 });
 
@@ -88,11 +88,11 @@ server.get('/recetas/:id', async (req, res) => {
 // Crear una nueva receta 
 //POST /recetas
 
-server.post('/recetas', async (req, res)=> {
-  const  newRecipe = req.body
+server.post('/recetas', async (req, res) => {
+  const newRecipe = req.body
   try {
-    const insert = 
-    'INSERT INTO recetas (nombre, ingredientes, instrucciones) VALUES (?,?,?)'
+    const insert =
+      'INSERT INTO recetas (nombre, ingredientes, instrucciones) VALUES (?,?,?)'
     const conn = await getConnection();
     const [result] = await conn.query(insert, [
       newRecipe.nombre,
@@ -111,3 +111,33 @@ server.post('/recetas', async (req, res)=> {
     });
   }
 });
+
+//Actualiza una receta existente
+//PUT /recetas/:id
+
+server.put('/recetas/:id', async (req, res) => {
+  const id = req.params.id;
+  const { nombre, ingredientes, instrucciones } = req.body;
+  try {
+    const update = 'UPDATE recetas SET nombre = ?, ingredientes = ?, instrucciones = ? WHERE id= ?';
+    const conn = await getConnection();
+    const [result] = await conn.query(update, [
+      nombre,
+      ingredientes,
+      instrucciones,
+      id
+    ]);
+    console.log(result);
+    conn.end();
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    req.json({
+      success: false,
+      message: 'Ha ocurrido un error, revise los campos'
+    });
+  }
+});
+
+
