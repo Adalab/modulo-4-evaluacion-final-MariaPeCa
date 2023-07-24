@@ -20,8 +20,6 @@ const server = express();
 
 server.use(cors());
 server.use(express.json({limit: "25mb"}));
-server.set('view engine', 'ejs');
-
 
 
 // Conexion a la base de datos
@@ -42,7 +40,6 @@ async function getConnection() {
 }
 
 
-
 // Poner a escuchar el servidor
 
 const port = process.env.PORT || 4500;
@@ -51,36 +48,25 @@ server.listen(port, () => {
 });
 
 
-
 // Endpoints
 
-// GET /api/items
+// GET /recetas
+//Obtener todas las recetas
 
-server.get("/api/items", async (req, res) => {
+server.get('/recetas', async (req, res) => {
 
-  const selectProducts = "SELECT * FROM products";
+  const selectAllRec= 'SELECT * FROM recetas';
 
   const conn = await getConnection();
 
-  const [results] = await conn.query(selectProducts);
-
-  console.log(results);
+  const [result] = await conn.query(selectAllRec);
 
   conn.end();
 
-  res.json(results);
+  res.json({
+    info: { 
+      count: result.length,
+    }, // número de elementos
+    results: result // listado
+ });
 });
-
-
-
-// GET /details
-
-server.get("/details", async (req, res) => {
-
-  res.render('details', {})
-});
-
-
-// Serv estáticos
-
-server.use(express.static("./src/public_html"));
