@@ -63,8 +63,8 @@ server.get('/recetas', async (req, res) => {
   res.json({
     info: { 
       count: result.length,
-    }, // número de elementos
-    results: result // listado
+    }, 
+    results: result 
  });
 });
 
@@ -77,9 +77,37 @@ server.get('/recetas/:id', async (req, res) => {
   const select = 'SELECT * FROM recetas WHERE id = ?';
   const conn = await getConnection();
   const [result] = await conn.query(select, id);
-  console.log(result);
+  //console.log(result);
   conn.end();
   res.json(
     result [0]
   );
+});
+
+
+// Crear una nueva receta 
+//POST /recetas
+
+server.post('/recetas', async (req, res)=> {
+  const  newRecipe = req.body
+  try {
+    const insert = 
+    'INSERT INTO recetas (nombre, ingredientes, instrucciones) VALUES (?,?,?)'
+    const conn = await getConnection();
+    const [result] = await conn.query(insert, [
+      newRecipe.nombre,
+      newRecipe.ingredientes,
+      newRecipe.instrucciones,
+    ]);
+    conn.end();
+    res.json({
+      success: true,
+      id: result.inserId
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: 'Ha ocurrido un error, revise los campos'
+    });
+  }
 });
