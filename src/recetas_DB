@@ -1,0 +1,25 @@
+CREATE DATABASE recetas_db;
+USE recetas_db;
+
+
+    
+    CREATE TABLE `recetas_db`.`recetas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  `ingredientes` VARCHAR(100) NOT NULL,
+  `instrucciones` TEXT(250) NOT NULL,
+  PRIMARY KEY (`id`));
+
+  SELECT * FROM recetas;
+  SELECT * FROM recetas WHERE id = 1; 
+  
+  INSERT INTO recetas (nombre, ingredientes, instrucciones) 
+  VALUES ();
+  
+  UPDATE recetas 
+  SET nombre = 'pollo con verduras', 
+    ingredientes = 'pollo, patatas, cebolla, zanahoria', 
+    instrucciones = 'poner el pollo y las verduras al horno...' 
+  WHERE id = 4;
+
+ DELETE FROM recetas WHERE id = 5; 
