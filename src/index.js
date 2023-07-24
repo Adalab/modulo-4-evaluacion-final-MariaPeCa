@@ -50,23 +50,36 @@ server.listen(port, () => {
 
 // Endpoints
 
-// GET /recetas
 //Obtener todas las recetas
+// GET /recetas
+
 
 server.get('/recetas', async (req, res) => {
 
   const selectAllRec= 'SELECT * FROM recetas';
-
   const conn = await getConnection();
-
   const [result] = await conn.query(selectAllRec);
-
   conn.end();
-
   res.json({
     info: { 
       count: result.length,
     }, // número de elementos
     results: result // listado
  });
+});
+
+// Obtener una recepta por su ID
+//GET /recetas/:id
+
+server.get('/recetas/:id', async (req, res) => {
+
+  const id = req.params.id;
+  const select = 'SELECT * FROM recetas WHERE id = ?';
+  const conn = await getConnection();
+  const [result] = await conn.query(select, id);
+  console.log(result);
+  conn.end();
+  res.json(
+    result [0]
+  );
 });
